@@ -26,3 +26,6 @@ android {
 dependencies {
     implementation project(':FtcRobotController')
 }
+dependencies {
+    implementation 'org.openftc:easyopencv:1.5.0'
+}
