@@ -28,6 +28,6 @@ dependencies {
     implementation 'com.pedropathing:pedro:2.0.2' // Remove if you don't intend to use PedroPathing
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16' // Remove if you don't intend to use the FTC Dashboard (required if using PedroPathing)
 
-    implementation "com.arcrobotics.ftclib:core:2.1.2"
+    implementation 'com.arcrobotics.ftclib:core:2.1.2'
 }
 
