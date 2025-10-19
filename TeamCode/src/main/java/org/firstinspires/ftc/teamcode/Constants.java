@@ -17,6 +17,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
+    // TODO: Rename this to the actual intake motor name in the robot configuration
+    public static final String INTAKE_MOTOR_NAME = "intakeMotor";
+    // TODO: Rename this to the actual outtake motor name in the robot configuration
+    public static final String OUTTAKE_MOTOR_NAME = "outtakeMotor";
+    public static final double LAUNCH_RPM = 16000;
+    
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(13.52)
             .forwardZeroPowerAcceleration(-40.4635666667)
