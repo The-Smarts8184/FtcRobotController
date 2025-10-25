@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.IntakeOuttake;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @Autonomous(name = "AprilTag Pattern Autonomous")
-public class PatternBased extends LinearOpMode {
+public class ObeliskandGoal extends LinearOpMode {
 
     // Drive motors
     private DcMotor leftFront = null;
@@ -20,13 +21,11 @@ public class PatternBased extends LinearOpMode {
     private DcMotor leftRear = null;
     private DcMotor rightRear = null;
 
-    // Intake and outtake motors
-    private DcMotor intakeMotor = null;
-    private DcMotor outtakeMotor = null;
+    private IntakeOuttake intakeOuttake;
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
-    private BallPattern ballPattern; // Instance of BallPattern
+    private NavtoBallpattern ballPattern; // Instance of NavtoBallpattern
 
     private static final boolean USE_WEBCAM = true;
 
@@ -44,11 +43,10 @@ public class PatternBased extends LinearOpMode {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
-        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        outtakeMotor = hardwareMap.get(DcMotor.class, "outtakeMotor");
+        intakeOuttake = new IntakeOuttake(this);
 
         initAprilTag();
-        ballPattern = new BallPattern(this); // Initialize BallPattern
+        ballPattern = new NavtoBallpattern(this); // Initialize NavtoBallpattern
 
         telemetry.addLine("Initialization complete. Waiting for start.");
         telemetry.update();
@@ -56,20 +54,30 @@ public class PatternBased extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            // Step 1: Rotate to find the signal AprilTag (21, 22, or 23)
+            // Step 1: Navigate to x3
+            navigateToX3();
+
+            // Step 2: Rotate to find the signal AprilTag (21, 22, or 23)
             findSignalPattern();
 
             if (!detectedPattern.isEmpty()) {
                 telemetry.addData("Pattern Detected", detectedPattern);
                 telemetry.update();
 
-                // Step 2: Navigate to the ball pattern line
+                // Step 3: Navigate to the ball pattern line
                 runPatternNavigation();
 
-                // TODO: Add logic here to interact with the balls (intake/outtake)
+                // Step 4: Run intake
+                intakeOuttake.runIntake();
 
-                // Step 3: Navigate to AprilTag ID 2
-                navigateToTag2();
+                // Step 5: Navigate to AprilTag ID 2 (the goal)
+                boolean atGoal = navigateToTag2();
+
+                // Step 6: Run outtake if at the goal
+                if (atGoal) {
+                    intakeOuttake.runOuttake();
+                }
+
             } else {
                 telemetry.addLine("No signal pattern detected.");
                 telemetry.update();
@@ -77,6 +85,18 @@ public class PatternBased extends LinearOpMode {
         }
 
         visionPortal.close();
+    }
+
+    private void navigateToX3() {
+        telemetry.addLine("Navigating to X3...");
+        telemetry.update();
+        // TODO: Add your specific pathing logic to get to the X3 grid location.
+        // This will depend on your robot's starting position.
+        // Example: drive forward for 2 seconds
+        // setMecanumPower(0.5, 0, 0);
+        // sleep(2000);
+        // stopRobot();
+        sleep(10); // Placeholder for navigation
     }
 
     private void initAprilTag() {
@@ -113,7 +133,7 @@ public class PatternBased extends LinearOpMode {
                 }
                 if (!detectedPattern.isEmpty()) break;
             }
-            sleep(20);
+            sleep(10);
         }
         stopRobot();
     }
@@ -132,7 +152,7 @@ public class PatternBased extends LinearOpMode {
         }
     }
 
-    private void navigateToTag2() {
+    private boolean navigateToTag2() {
         telemetry.addLine("Navigating to AprilTag ID 2");
         telemetry.update();
 
@@ -149,7 +169,7 @@ public class PatternBased extends LinearOpMode {
                     break;
                 }
             }
-            sleep(20);
+            sleep(10);
         }
         stopRobot();
 
@@ -177,7 +197,7 @@ public class PatternBased extends LinearOpMode {
 
                 if(!foundTag) {
                     stopRobot();
-                    break;
+                    return false; // Lost the tag
                 }
 
                 distanceError = tag2Detection.ftcPose.range - targetDistance;
@@ -192,29 +212,31 @@ public class PatternBased extends LinearOpMode {
 
                 telemetry.addData("Distance", tag2Detection.ftcPose.range);
                 telemetry.update();
-                sleep(20);
+                sleep(10);
             }
             stopRobot();
             telemetry.addLine("Positioned at 48 inches from tag 2.");
             telemetry.update();
+            return true;
         } else {
             telemetry.addLine("AprilTag ID 2 not found.");
             telemetry.update();
+            return false;
         }
     }
 
-    private void stopRobot() {
+    public void stopRobot() {
         setDrivePower(0, 0, 0, 0);
     }
 
-    private void setDrivePower(double lf, double rf, double lr, double rr) {
+    public void setDrivePower(double lf, double rf, double lr, double rr) {
         leftFront.setPower(lf);
         rightFront.setPower(rf);
         leftRear.setPower(lr);
         rightRear.setPower(rr);
     }
 
-    private void setMecanumPower(double drive, double strafe, double turn) {
+    public void setMecanumPower(double drive, double strafe, double turn) {
         double leftFrontPower = drive + strafe + turn;
         double rightFrontPower = drive - strafe - turn;
         double leftRearPower = drive - strafe + turn;

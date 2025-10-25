@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedroPathing.autoSubsystems;
+package org.firstinspires.ftc.teamcode.pedroPathing.subsystems;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
