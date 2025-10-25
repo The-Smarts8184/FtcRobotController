@@ -59,7 +59,7 @@ public class teleOpVision {
             // Assuming target is at the same height as the camera for simplicity to start.
             // A more accurate approach would require knowing the AprilTag's height.
             // For now, this is a placeholder calculation.
-            // A better formula would be:
+            // A better formula for this would be:
             // distance = (TARGET_HEIGHT - CAMERA_HEIGHT_INCHES) / Math.tan(Math.toRadians(CAMERA_PITCH_DEGREES + targetY));
             // Since we don't have TARGET_HEIGHT, we will use a simplified formula for now, assuming target is on the floor.
             double distance = CAMERA_HEIGHT_INCHES / Math.tan(Math.toRadians(CAMERA_PITCH_RADIANS / (Math.PI/180) + getTargetY()));
