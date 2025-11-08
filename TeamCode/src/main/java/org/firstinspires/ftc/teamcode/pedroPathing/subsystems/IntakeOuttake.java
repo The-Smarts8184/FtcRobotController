@@ -9,8 +9,8 @@ public class IntakeOuttake {
     private DcMotor outtakeMotor;
 
     // Constants for motor power. Adjust as needed.
-    private static final double INTAKE_POWER = 0.8;
-    private static final double OUTTAKE_POWER = 0.6;
+    private static final double INTAKE_POWER = 0.7;
+    private static final double OUTTAKE_POWER = 0.9;
 
     public IntakeOuttake(HardwareMap hardwareMap) {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");

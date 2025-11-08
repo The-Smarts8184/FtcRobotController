@@ -17,6 +17,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
+    // Alliance selection
+    public enum Alliance {
+        BLUE,
+        RED
+    }
+
     // TODO: Rename this to the actual intake motor name in the robot configuration
     public static final String INTAKE_MOTOR_NAME = "intakeMotor";
     // TODO: Rename this to the actual outtake motor name in the robot configuration
@@ -71,7 +77,6 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .mecanumDrivetrain(driveConstants)
                 .pinpointLocalizer(localizerConstants)
-                .pathConstraints(pathConstraints)
                 .twoWheelLocalizer(localizerConstantsodo)
                 .build();
     }
