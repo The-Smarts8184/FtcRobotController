@@ -1,37 +1,36 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.paths;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 public class NavtoBallpattern {
 
-    private ObeliskandGoal opMode;
+    // This class is now a placeholder for your pathing logic.
+    // In a command-based structure, the main OpMode would typically handle navigation commands directly,
+    // or you would use a more advanced pathing library like Road Runner.
 
-    public NavtoBallpattern(ObeliskandGoal opMode) {
-        this.opMode = opMode;
+    public NavtoBallpattern(HardwareMap hardwareMap) {
+        // The hardwareMap is passed in case you need to initialize any sensors or motors here.
     }
 
-    public void navigateToGPP() {
-        opMode.telemetry.addLine("Navigating to GPP line...");
-        opMode.telemetry.update();
-        // TODO: Add pathing logic here to drive to the GPP line.
-        // Example: drive forward 24 inches
-        // opMode.setMecanumPower(0.5, 0, 0); 
-        // opMode.sleep(1000); 
-        // opMode.stopRobot();
-        opMode.sleep(1000); // Placeholder for navigation
+    /**
+     * Placeholder for navigating to the GPP line.
+     * In a real implementation, this would likely return a command or a series of waypoints.
+     */
+    public void planGPPNavigation() {
+        // TODO: Add your pathing logic here (e.g., generate a trajectory).
     }
 
-    public void navigateToPGP() {
-        opMode.telemetry.addLine("Navigating to PGP line...");
-        opMode.telemetry.update();
-        // TODO: Add pathing logic here to drive to the PGP line.
-        // Example: drive forward 24 inches, then strafe left 12 inches
-        opMode.sleep(1000); // Placeholder for navigation
+    /**
+     * Placeholder for navigating to the PGP line.
+     */
+    public void planPGPNavigation() {
+        // TODO: Add your pathing logic here.
     }
 
-    public void navigateToPPG() {
-        opMode.telemetry.addLine("Navigating to PPG line...");
-        opMode.telemetry.update();
-        // TODO: Add pathing logic here to drive to the PPG line.
-        // Example: drive forward 24 inches, then strafe right 12 inches
-        opMode.sleep(1000); // Placeholder for navigation
+    /**
+     * Placeholder for navigating to the PPG line.
+     */
+    public void planPPGNavigation() {
+        // TODO: Add your pathing logic here.
     }
 }
