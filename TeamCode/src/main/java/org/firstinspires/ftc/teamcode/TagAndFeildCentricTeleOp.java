@@ -45,7 +45,7 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x;
 
             // --- AprilTag Lock-on Logic ---
-            double rx = 0; // Rotational power
+            double rx = 0; // Rotational power TODO
             LLResult llResult = limelight.getLatestResult();
 
             // Check if an AprilTag is visible
