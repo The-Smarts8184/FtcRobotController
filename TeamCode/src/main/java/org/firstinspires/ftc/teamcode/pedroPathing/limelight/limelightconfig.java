@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.limelight;
 
-import static com.rowanmcalpin.nextftc.ftc.OpModeData.telemetry;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -12,7 +9,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-public class limelightconfig {
+public class limelightconfig extends OpMode {
 
     private Limelight3A limelight;
     private IMU imu;
@@ -23,7 +20,7 @@ public class limelightconfig {
         limelight.pipelineSwitch(9); //april tag pipeline
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
-        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot));
+        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
     }
 
     @Override

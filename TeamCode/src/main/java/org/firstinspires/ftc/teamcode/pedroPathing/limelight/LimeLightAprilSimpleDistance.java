@@ -1,23 +1,13 @@
-// Import statements (simplified for FTC context)
+package org.firstinspires.ftc.teamcode.pedroPathing.limelight;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.qualcomm.robotcore.hardware.IMU;
 
-// Limelight imports (FTC SDK + Limelight library)
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-
-@TeleOp(name="AprilTagDistanceDemo", group="Linear Opmode")
-public class AprilTagDistanceDemo extends LinearOpMode {
-
-    private double distance;
-    private IMU imu;
+@TeleOp(name="LimeLightAprilSimpleDistance", group="Linear Opmode")
+public class LimeLightAprilSimpleDistance extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // Initialize hardware
-        imu = hardwareMap.get(IMU.class, "imu");
-
         // Initialize Limelight pipeline (example: pipeline 8 for AprilTag)
         LimelightHelpers.setPipelineIndex("limelight", 8);
 
@@ -31,13 +21,15 @@ public class AprilTagDistanceDemo extends LinearOpMode {
 
             if (results != null && results.targetingResults.valid) {
                 double targetArea = results.targetingResults.ta;
+                double angleToTag = results.targetingResults.tx;
 
                 // Calculate distance using curve-fit equation
-                distance = getDistanceFromTag(targetArea);
+                double distance = getDistanceFromTag(targetArea);
 
                 // Display values
                 telemetry.addData("Target Area", targetArea);
                 telemetry.addData("Distance (mm)", distance);
+                telemetry.addData("Angle to Tag", angleToTag);
                 telemetry.update();
             }
         }
@@ -46,7 +38,6 @@ public class AprilTagDistanceDemo extends LinearOpMode {
     /**
      * Curve-fit equation derived from calibration data
      * Equation: distance = scale / targetArea
-     * Scale constant comes from curve fitting tool (mycurvefit.com)
      */
     public double getDistanceFromTag(double targetArea) {
         if (targetArea <= 0) return Double.POSITIVE_INFINITY; // invalid detection
