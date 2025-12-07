@@ -13,7 +13,7 @@ public class LimeLight extends OpMode {
     @Override
     public void init() {
         limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight3A.pipelineSwitch(0); //make pipelines TODO MAKE THE PIPELINES
+        limelight3A.pipelineSwitch(9); //make pipelines TODO MAKE THE PIPELINES
 
     }
 

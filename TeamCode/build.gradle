@@ -32,4 +32,5 @@ dependencies {
     implementation project(':FtcRobotController')
     implementation "com.arcrobotics.ftclib:core:2.1.2"
     implementation "com.bylazar:fullpanels:1.0.6"
+    implementation 'com.google.android.gms:play-services-dtdi:16.0.0-beta02'
 }

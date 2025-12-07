@@ -21,7 +21,7 @@ public class teleOpVision {
 
     public teleOpVision(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(0); // TODO: Set the correct pipeline for AprilTags
+        limelight.pipelineSwitch(9); // TODO: Set the correct pipeline for AprilTags
     }
 
     public LLResult getLatestResult() {
