@@ -61,7 +61,7 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
                 // If no tag is seen, fall back to manual rotation
                 rx = gamepad1.right_stick_x;
             }
-            // --- End AprilTag Lock-on? ---
+            // --- End AprilTag Lock-on? TODO RN PLS ---
 
             // This button choice was arbitrary. Any button would work.
             if (gamepad1.options) {
