@@ -9,6 +9,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.util.HeadingPID;
 
 @TeleOp(name = "Tag and Field Centric TeleOp")
 public class TagAndFeildCentricTeleOp extends LinearOpMode {
@@ -36,6 +37,10 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
         Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(8); // Use your AprilTag pipeline
 
+        // PID controller for turning. Tune these P, I, and D values for your robot.
+        HeadingPID turnController = new HeadingPID(0.03, 0.0, 0.001);
+        turnController.setGoal(0); // We want to turn until the target is centered (tx = 0)
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -45,23 +50,39 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
             double x = gamepad1.left_stick_x;
 
             // --- AprilTag Lock-on Logic ---
-            double rx = 0; // Rotational power TODO
-            LLResult llResult = limelight.getLatestResult();
+            double rx;
+            double manualRx = gamepad1.right_stick_x;
 
-            // Check if an AprilTag is visible
-            if (llResult != null && llResult.isValid()) {
-                // tx is the horizontal angle from the crosshair to the target
-                double tx = llResult.getTx();
-
-                // Use a simple proportional controller to turn the robot towards the target.
-                // You will need to tune the Kp value for your robot.
-                double Kp_turn = 0.03;
-                rx = Kp_turn * tx;
+            // Check if the user is trying to rotate manually. Use a deadzone to avoid drift.
+            if (Math.abs(manualRx) > 0.1) {
+                // MANUAL CONTROL
+                // User is turning. Right stick X is positive to the right.
+                // For this robot's kinematics, a positive 'rx' causes a clockwise (right) turn.
+                // So, we can directly use the joystick value for intuitive control.
+                rx = manualRx;
+                turnController.reset(); // Reset PID controller when using manual override
             } else {
-                // If no tag is seen, fall back to manual rotation
-                rx = gamepad1.right_stick_x;
+                // AUTOMATIC CONTROL
+                // User is not turning, so try to lock on to an AprilTag.
+                LLResult llResult = limelight.getLatestResult();
+
+                // Check for a valid result with at least one fiducial tag
+                if (llResult.isValid() && !llResult.getFiducialResults().isEmpty()) {
+                    double tx = llResult.getTx();
+
+                    // Use the PID controller to calculate the rotational power.
+                    // If the target is on the right (tx > 0), we need to turn right (rx > 0).
+                    // The HeadingPID class expects radians, so we convert tx from degrees.
+                    // We negate the output because a positive tx needs a positive rx, and the controller
+                    // output is proportional to (goal - measurement) = (0 - tx) = -tx.
+                    rx = -turnController.calculate(Math.toRadians(tx));
+                } else {
+                    // No tag is seen, and user is not turning, so don't rotate.
+                    rx = 0;
+                    turnController.reset(); // Reset PID if no tag is seen
+                }
             }
-            // --- End AprilTag Lock-on? TODO RN PLS---
+            // --- End AprilTag Lock-on ---
 
             // This button choice was arbitrary. Any button would work.
             if (gamepad1.options) {

@@ -1,22 +1,25 @@
-package org.firstinspires.ftc.teamcode.pedroPathing.limelight;
-
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
+// Import statements (simplified for FTC context)
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.qualcomm.robotcore.hardware.IMU;
 
-@TeleOp(name="LimeLightAprilSimpleDistance", group="Linear Opmode")
-public class LimeLightAprilSimpleDistance extends LinearOpMode {
+// Limelight imports (FTC SDK + Limelight library)
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 
-    private Limelight3A limelight;
+@TeleOp(name="AprilTagDistanceDemo", group="Linear Opmode")
+public class AprilTagDistanceDemo extends LinearOpMode {
+
+    private double distance;
+    private IMU imu;
 
     @Override
     public void runOpMode() {
         // Initialize hardware
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        imu = hardwareMap.get(IMU.class, "imu");
 
         // Initialize Limelight pipeline (example: pipeline 8 for AprilTag)
-        limelight.pipelineSwitch(8);
+        LimelightHelpers.setPipelineIndex("limelight", 8);
 
         telemetry.addLine("Ready to start");
         telemetry.update();
@@ -24,19 +27,17 @@ public class LimeLightAprilSimpleDistance extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Get latest Limelight result
-            LLResult results = limelight.getLatestResult();
+            LimelightHelpers.LimelightResults results = LimelightHelpers.getLatestResults("limelight");
 
-            if (results != null && results.isValid()) {
-                double targetArea = results.getTa();
-                double angleToTag = results.getTx();
+            if (results != null && results.targetingResults.valid) {
+                double targetArea = results.targetingResults.ta;
 
                 // Calculate distance using curve-fit equation
-                double distance = getDistanceFromTag(targetArea);
+                distance = getDistanceFromTag(targetArea);
 
                 // Display values
                 telemetry.addData("Target Area", targetArea);
                 telemetry.addData("Distance (mm)", distance);
-                telemetry.addData("Angle to Tag", angleToTag);
                 telemetry.update();
             }
         }
@@ -45,6 +46,7 @@ public class LimeLightAprilSimpleDistance extends LinearOpMode {
     /**
      * Curve-fit equation derived from calibration data
      * Equation: distance = scale / targetArea
+     * Scale constant comes from curve fitting tool (mycurvefit.com)
      */
     public double getDistanceFromTag(double targetArea) {
         if (targetArea <= 0) return Double.POSITIVE_INFINITY; // invalid detection
