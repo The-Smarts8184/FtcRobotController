@@ -1,0 +1,93 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.pedropathing.control.FilteredPIDFCoefficients;
+import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
+import com.pedropathing.ftc.FollowerBuilder;
+import com.pedropathing.ftc.drivetrains.MecanumConstants;
+import com.pedropathing.ftc.localization.constants.PinpointConstants;
+import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
+import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+public class Constants {
+    // Alliance selection
+    public enum Alliance {
+        BLUE,
+        RED
+    }
+
+    // TODO: Rename this to the actual intake motor name in the robot configuration
+    public static final String INTAKE_MOTOR_NAME = "intakeMotor";
+    // TODO: Rename this to the actual outtake motor name in the robot configuration
+    public static final String OUTTAKE_MOTOR_NAME = "outtakeMotor";
+    public static final double LAUNCH_RPM = 16000;
+    
+    public static FollowerConstants followerConstants = new FollowerConstants()
+            .mass(13.52)
+            .forwardZeroPowerAcceleration(-40.4635666667)
+            .lateralZeroPowerAcceleration(-76.0515)
+            .useSecondaryTranslationalPIDF(false)
+            .useSecondaryHeadingPIDF(false)
+            .useSecondaryDrivePIDF(false)
+            .centripetalScaling(0.00002)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(3, 0, 0.1, 0))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01, 0, 0, 0.6, 0));
+
+    public static MecanumConstants driveConstants = new MecanumConstants()
+            .leftFrontMotorName("leftFront")
+            .leftRearMotorName("leftRear")
+            .rightFrontMotorName("rightFront")
+            .rightRearMotorName("rightRear")
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(70.1525333334)
+            .yVelocity(54.9957666667);
+
+    public static PinpointConstants localizerConstants = new PinpointConstants()
+            .forwardPodY(2.54)
+            .strafePodX(-3.63)
+            .distanceUnit(DistanceUnit.INCH)
+            .hardwareMapName("pinpoint")
+            .yawScalar(1.0)
+            .encoderResolution(
+                    GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD
+            )
+            .customEncoderResolution(13.26291192)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+    public static PathConstraints pathConstraints = new PathConstraints(
+            0.995,
+            500,
+            1,
+            1
+    );
+
+    public static Follower createFollower(HardwareMap hardwareMap) {
+        return new FollowerBuilder(followerConstants, hardwareMap)
+                .mecanumDrivetrain(driveConstants)
+                .pinpointLocalizer(localizerConstants)
+                .twoWheelLocalizer(localizerConstantsodo)
+                .build();
+    }
+    public static TwoWheelConstants localizerConstantsodo = new TwoWheelConstants()
+            .forwardEncoder_HardwareMapName("leftFront")
+            .strafeEncoder_HardwareMapName("rightRear")
+            .IMU_HardwareMapName("imu")
+            .IMU_Orientation(
+                    new RevHubOrientationOnRobot(
+                            RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                            RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                    )
+            );
+}
