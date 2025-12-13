@@ -38,7 +38,7 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
         limelight.pipelineSwitch(8); // Use your AprilTag pipeline
 
         // PID controller for turning. Tune these P, I, and D values for your robot.
-        PDIF turnController = new PDIF(0.03, 0.0, 0.001);
+        PIDF turnController = new PDIF(0.03, 0.0, 0.001);
         turnController.setGoal(0); // We want to turn until the target is centered (tx = 0)
 
         waitForStart();

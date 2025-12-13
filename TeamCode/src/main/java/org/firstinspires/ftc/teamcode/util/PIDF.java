@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.util;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,13 +11,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.util.RobotConstants;
-import org.firstinspires.ftc.teamcode.util.RobotConstants.*;
 
 @Config
 @TeleOp(name = "PIDF")
 public class PIDF extends OpMode {
 
-    public static PIDController controller;
+    public static PIDFController controller;
     public static double p =0.03, i = 0.00005, d = 0.00001;
     public static double f = 0;
 
@@ -30,7 +29,7 @@ public class PIDF extends OpMode {
 
     @Override
     public void init() {
-        controller = new PIDController(p, i,d);
+        controller = new PIDFController(p, i,d, f);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         frontMotor = hardwareMap.get(DcMotorEx.class,RobotConstants.Outtake.outtakeFront);
@@ -42,15 +41,12 @@ public class PIDF extends OpMode {
 
     @Override
     public void loop() {
-        controller.setPID(p,i,d);
+        controller.setPIDF(p,i,d,f);
         int pos = backMotor.getCurrentPosition();
         int backMotorPos = pos;
         int frontMotorPos = frontMotor.getCurrentPosition();
 
-        double pid = controller.calculate(pos, target);
-        double ff = Math.cos(Math.toRadians(target/ticks_in_degree)) * f;
-
-        double power = pid + ff;
+        double power = controller.calculate(pos, target);
 
         frontMotor.setPower(power);
         backMotor.setPower(power);
