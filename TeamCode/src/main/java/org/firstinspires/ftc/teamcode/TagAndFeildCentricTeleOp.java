@@ -9,7 +9,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.util.HeadingPID;
+import org.firstinspires.ftc.teamcode.util.PIDF;
 
 @TeleOp(name = "Tag and Field Centric TeleOp")
 public class TagAndFeildCentricTeleOp extends LinearOpMode {
@@ -38,7 +38,7 @@ public class TagAndFeildCentricTeleOp extends LinearOpMode {
         limelight.pipelineSwitch(8); // Use your AprilTag pipeline
 
         // PID controller for turning. Tune these P, I, and D values for your robot.
-        HeadingPID turnController = new HeadingPID(0.03, 0.0, 0.001);
+        PDIF turnController = new PDIF(0.03, 0.0, 0.001);
         turnController.setGoal(0); // We want to turn until the target is centered (tx = 0)
 
         waitForStart();
